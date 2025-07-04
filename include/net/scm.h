@@ -34,6 +34,7 @@ struct scm_fp_list {
 #ifndef __GENKSYMS__
 #ifdef CONFIG_UNIX
 	bool			inflight;
+	bool			dead;
 	struct list_head	vertices;
 	struct unix_edge        *edges;
 #endif
