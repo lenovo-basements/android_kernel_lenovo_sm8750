@@ -410,8 +410,13 @@ EXPORT_SYMBOL_GPL(xhci_sideband_register);
 void
 xhci_sideband_unregister(struct xhci_sideband *sb)
 {
-	struct xhci_hcd *xhci = sb->xhci;
+	struct xhci_hcd *xhci;
 	int i;
+
+	if (!sb)
+		return;
+
+	xhci = sb->xhci;
 
 	mutex_lock(&sb->mutex);
 	for (i = 0; i < EP_CTX_PER_DEV; i++)
