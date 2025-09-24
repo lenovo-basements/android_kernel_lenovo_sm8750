@@ -2886,10 +2886,12 @@ void vma_adjust_trans_huge(struct vm_area_struct *vma,
 
 static void unmap_folio(struct folio *folio)
 {
-	enum ttu_flags ttu_flags = TTU_RMAP_LOCKED | TTU_SPLIT_HUGE_PMD |
-		TTU_SYNC;
+	enum ttu_flags ttu_flags = TTU_RMAP_LOCKED | TTU_SYNC;
 
 	VM_BUG_ON_FOLIO(!folio_test_large(folio), folio);
+
+	if (folio_test_pmd_mappable(folio))
+		ttu_flags |= TTU_SPLIT_HUGE_PMD;
 
 	/*
 	 * Anon pages need migration entries to preserve them, but file
@@ -3119,6 +3121,12 @@ static void reset_src_folio(struct folio *src)
 
 static bool lru_add_dst(struct lruvec *lruvec, struct folio *src, struct folio *dst)
 {
+	bool added = false;
+
+	trace_android_vh_mm_customize_lru_add_dst(lruvec, src, dst, &added);
+	if (added)
+		return true;
+
 	if (folio_can_split(src))
 		return false;
 
