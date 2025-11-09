@@ -522,4 +522,10 @@ config LOONGSON2_THERMAL
 	  is higher than the high temperature threshold or lower than the low
 	  temperature threshold, the interrupt will occur.
 
+config LENOVO_SYS_TEMP
+	tristate "Lenovo Thermal Temperature Support"
+	depends on THERMAL && THERMAL_OF
+	help
+          Support for ther Lenovo Thermal Temperature Support.
+
 endif
